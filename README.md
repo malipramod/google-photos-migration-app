@@ -1,2 +1,2 @@
-# google-photos-migration
+# Google Photos Migration
 Google Photos Migration App
