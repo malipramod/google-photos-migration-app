@@ -10,5 +10,5 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
   imports:[BrowserAnimationsModule]  
 })
 export class AppComponent {
-  title = 'Google Photos ';
+  title = 'Google Photos Migration';
 }

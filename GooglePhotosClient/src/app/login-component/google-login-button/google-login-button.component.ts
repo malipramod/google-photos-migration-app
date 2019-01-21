@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-google-login-button',
@@ -9,6 +9,7 @@ export class GoogleLoginButtonComponent implements OnInit {
 
   constructor() { }
 
+  @Input() buttonTitle:string;
   ngOnInit() {
   }
 

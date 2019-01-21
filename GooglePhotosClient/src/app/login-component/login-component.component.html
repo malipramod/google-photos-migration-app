@@ -1,9 +1,9 @@
 <div class="container">
     <div id="srcBtn" >
-        <app-google-login-button></app-google-login-button>
+        <app-google-login-button (click)="loginToGoogle('src')" [buttonTitle]='sourceTitle'></app-google-login-button>
     </div>
     
     <div id="srcDest" >
-        <app-google-login-button></app-google-login-button>
+        <app-google-login-button (click)="loginToGoogle('dest')"  [buttonTitle]='destinationTitle'></app-google-login-button>
     </div>
 </div>
