@@ -1,9 +1,10 @@
 <div class="container">
-    <div id="srcBtn" >
+    <div id="srcBtn">
+        <img *ngIf="srcImage!=''" id="srcImag" [src]="srcImage" height="50" width="50">
         <app-google-login-button (click)="loginToGoogle('src')" [buttonTitle]='sourceTitle'></app-google-login-button>
     </div>
-    
-    <div id="srcDest" >
-        <app-google-login-button (click)="loginToGoogle('dest')"  [buttonTitle]='destinationTitle'></app-google-login-button>
+    <div id="srcDest">
+        <img *ngIf="destImage!=''" id="srcImag" [src]="destImage" height="50" width="50">
+        <app-google-login-button (click)="loginToGoogle('dest')" [buttonTitle]='destinationTitle'></app-google-login-button>
     </div>
 </div>

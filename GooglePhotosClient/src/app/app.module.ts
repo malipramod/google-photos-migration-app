@@ -10,6 +10,8 @@ import { MigrateComponentComponent } from './migrate-component/migrate-component
 import { LoginComponentComponent } from './login-component/login-component.component';
 import { GoogleLoginButtonComponent } from './login-component/google-login-button/google-login-button.component';
 import { LoginComponentService } from './login-component/login-component.service';
+import {HttpClientModule } from '@angular/common/http'
+import { MigrateComponentService } from './migrate-component/migrate-component.service';
 
 const appRoute: Routes = [
   { path: 'Migrate', component: MigrateComponentComponent },
@@ -29,6 +31,7 @@ const appRoute: Routes = [
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     LayoutModule,
     MatToolbarModule,
     MatButtonModule,
@@ -37,7 +40,7 @@ const appRoute: Routes = [
     MatListModule,
     RouterModule.forRoot(appRoute)
   ],
-  providers: [LoginComponentService],
+  providers: [LoginComponentService,MigrateComponentService],
   bootstrap: [AppComponent],
   exports:[]
 })
