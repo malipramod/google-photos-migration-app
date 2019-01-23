@@ -61,6 +61,6 @@ export class LoginComponentService {
         return type === 'src' ? localStorage.getItem("GoogleTokenSrc") : type === 'dest' ? localStorage.getItem("GoogleTokenDest") : "";
     }
     checkLogIn(): boolean {
-        return (JSON.parse(localStorage.getItem("isLoggedInSrc")) && JSON.parse(localStorage.getItem("isLoggedInDest"))) ? true : false;
+        return ((JSON.parse(localStorage.getItem("isLoggedInSrc"))) && (JSON.parse(localStorage.getItem("isLoggedInDest")))) ? true : false;
     }
 }

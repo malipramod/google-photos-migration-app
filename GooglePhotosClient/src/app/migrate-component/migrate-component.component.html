@@ -1,3 +1,7 @@
-<p>
-  migrate-component works!
-</p>
+<app-button (click)="next(albums.nextPageToken)" [btnText]="nextButton"></app-button>
+<div class="cards">
+  <div *ngFor="let album of albums" class="card">
+    <app-card [coverPhotoBaseUrl]="album.coverPhotoBaseUrl" [mediaItemsCount]="album.mediaItemsCount" [productUrl]="album.productUrl"
+      [title]="album.title" [id]="album.id"></app-card>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+.example-button-row button,
+.example-button-row a {
+  margin-right: 8px;
+}
+
+div{
+  padding: 5px;
+  float: right;
+}
