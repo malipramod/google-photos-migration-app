@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-card',
@@ -11,9 +11,14 @@ export class CardComponent implements OnInit {
   @Input() productUrl: string;
   @Input() title: string;
   @Input() id: string;
+  @Output() migrateAlbum:EventEmitter<string> = new EventEmitter<string>();
   constructor() { }
 
   ngOnInit() {
+  }
+
+  startMigrateAlbum(albumId:string){
+    this.migrateAlbum.emit(albumId);
   }
 
 }

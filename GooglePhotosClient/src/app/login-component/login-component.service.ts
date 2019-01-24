@@ -58,9 +58,11 @@ export class LoginComponentService {
     }
 
     getToken(type:string){
-        return type === 'src' ? localStorage.getItem("GoogleTokenSrc") : type === 'dest' ? localStorage.getItem("GoogleTokenDest") : "";
+        return (type === 'src' && new Date() < new Date(localStorage.getItem("GoogleToeknExpiresSrc"))) ? localStorage.getItem("GoogleTokenSrc") : 
+                (type === 'dest' && new Date() < new Date(localStorage.getItem("GoogleToeknExpiresDest"))) ? localStorage.getItem("GoogleTokenDest") : "";
     }
     checkLogIn(): boolean {
-        return ((JSON.parse(localStorage.getItem("isLoggedInSrc"))) && (JSON.parse(localStorage.getItem("isLoggedInDest")))) ? true : false;
+        return ((JSON.parse(localStorage.getItem("isLoggedInSrc")) && (new Date() < new Date(localStorage.getItem("GoogleToeknExpiresSrc")))) 
+        && ((JSON.parse(localStorage.getItem("isLoggedInDest"))) && (new Date() < new Date(localStorage.getItem("GoogleToeknExpiresDest"))))) ? true : false;
     }
 }
