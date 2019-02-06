@@ -1,6 +1,4 @@
 <app-button (click)="next()" [btnText]="nextButton"></app-button>
-<app-button (click)="download()" [btnText]="downloadButton"></app-button>
-
 <div class="cards">
   <div *ngFor="let album of albums" class="card">
     <app-card [coverPhotoBaseUrl]="album.coverPhotoBaseUrl" [mediaItemsCount]="album.mediaItemsCount" [productUrl]="album.productUrl"

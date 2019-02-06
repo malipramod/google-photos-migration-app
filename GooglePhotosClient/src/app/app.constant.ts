@@ -18,3 +18,4 @@ export const googleLogo = 'https://upload.wikimedia.org/wikipedia/commons/thumb/
 
 export const googlePhotoApiURL='https://photoslibrary.googleapis.com/v1/';
 export const pageSize = 100;
+export const googlePhotosUploadAPILocal = 'http://localhost:57355/api/UploadToGooglePhotos';

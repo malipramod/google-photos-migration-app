@@ -40,3 +40,9 @@ export interface ICreateAlbum {
     title: string;
     isWriteable: string;
 }
+
+export interface IUploadGooglePhotos {
+    albumId: string;
+    mediaItems: Array<IMediaItem>;
+
+}

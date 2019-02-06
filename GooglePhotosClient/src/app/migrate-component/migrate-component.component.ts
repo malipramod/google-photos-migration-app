@@ -67,11 +67,10 @@ export class MigrateComponentComponent implements OnInit {
                 }
             )
         } else {
-            // console.log(this.mediaMap[0][0]);
-            let file = this.mediaMap[0][0];
+            let files = this.mediaMap[0];
             this.migrateService.createAlbum("dest", album.title).subscribe(
-                (val: ICreateAlbum) => {
-                    this.uploadMediaToAlbum('dest', file.fileName, val, file);
+                (album: ICreateAlbum) => {
+                    this.uploadMediaToAlbum('dest', album.id, files);
                 },
                 (err: string) => {
                     console.log(err);
@@ -80,21 +79,7 @@ export class MigrateComponentComponent implements OnInit {
         }
     }
 
-    uploadMediaToAlbum(type: string, fileName:string, album: ICreateAlbum,media:IMediaItem) {
-       let bytes = "";
-        console.log(this.migrateService.uploadMediaToAlubm(type, fileName, bytes));
+    uploadMediaToAlbum(type: string,albumId: string,files:ICreateAlbum) {
+        console.log(this.migrateService.uploadMediaToAlubm(type, albumId, files));
     }
-
-
-    downloadButton="Download";
-    download(){
-        this.migrateService.downloadMedia();
-        // this.migrateService.downloadMedia().subscribe(
-        //     (data:any) => {
-        //         console.log(data);
-        //     }
-        // )
-    }
-
-   
 }
