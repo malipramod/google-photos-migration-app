@@ -67,19 +67,31 @@ export class MigrateComponentComponent implements OnInit {
                 }
             )
         } else {
-            let files = this.mediaMap[0];
             this.migrateService.createAlbum("dest", album.title).subscribe(
                 (album: ICreateAlbum) => {
-                    this.uploadMediaToAlbum('dest', album.id, files);
+                    let mediaLength:number=this.mediaMap.length;
+                    let files = this.mediaMap[mediaLength-1];
+                    this.uploadMediaToAlbum('dest', album.id, files, mediaLength - 1);
                 },
                 (err: string) => {
                     console.log(err);
                 }
             );
+
+
+
         }
     }
 
-    uploadMediaToAlbum(type: string,albumId: string,files:ICreateAlbum) {
-        console.log(this.migrateService.uploadMediaToAlubm(type, albumId, files));
+    uploadMediaToAlbum(type: string, albumId: string, files: ICreateAlbum,mediaLength:number) {
+        this.migrateService.uploadMediaToAlubm(type, albumId, files).subscribe(
+            (val: any) =>{ 
+                if(mediaLength>0){
+                    mediaLength--;
+                    let files = this.mediaMap[mediaLength];
+                    this.uploadMediaToAlbum('dest', albumId, files,mediaLength);
+                }
+            }
+        );
     }
 }

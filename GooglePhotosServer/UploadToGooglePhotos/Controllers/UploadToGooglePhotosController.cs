@@ -3,20 +3,26 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Configuration;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using UploadToGooglePhotos.Models;
 
 namespace UploadToGooglePhotos.Controllers {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class UploadToGooglePhotosController : ApiController {
 
-        public MediaItemCreate Post(MediaItemRequest mediaItemRequest) {
+        public List<MediaItemCreate> Post(MediaItemRequest mediaItemRequest) {
             string token = Request.Headers.Authorization.Parameter;
             List<UploadTokenModel> uploadTokens = new List<UploadTokenModel>();
             string APIURL = WebConfigurationManager.AppSettings["googleApiURL"];
-            MediaItemCreate responses = new MediaItemCreate();
+            int batchSize = Convert.ToInt32(WebConfigurationManager.AppSettings["batchSize"]);
+
+            MediaItemCreate response = new MediaItemCreate();
+            List<MediaItemCreate> responses = new List<MediaItemCreate>();
 
             if(token == string.Empty) {
                 NewMediaItemResult newMediaItemResult = new NewMediaItemResult() {
@@ -24,7 +30,8 @@ namespace UploadToGooglePhotos.Controllers {
                         Message = "Token Is Empty"
                     }
                 };
-                responses.NewMediaItemResults.Add(newMediaItemResult);
+                response.NewMediaItemResults.Add(newMediaItemResult);
+                responses.Add(response);
                 return responses;
             }
 
@@ -32,8 +39,8 @@ namespace UploadToGooglePhotos.Controllers {
             foreach(MediaItems mediaItem in mediaItemRequest.MediaItems) {
                 var runningTask = Task.Run(() => {
                     WebClient wc = new WebClient();
-                    string file = Path.GetFileName(mediaItem.BaseUrl);
-                    byte[] imageBytes = wc.DownloadData(new Uri(mediaItem.BaseUrl));
+                    string url = mediaItem.BaseUrl + "=w" + mediaItem.MediaMetadata.Width + "-h" + mediaItem.MediaMetadata.Height;
+                    byte[] imageBytes = wc.DownloadData(new Uri(url));
                     UploadTokenModel uploadToken = new UploadTokenModel() {
                         Description = mediaItem.Filename,
                         UploadToken = GetUploadToken("POST", APIURL + "uploads", token, mediaItem.Filename, imageBytes).Content
@@ -48,6 +55,8 @@ namespace UploadToGooglePhotos.Controllers {
                 AlbumId = mediaItemRequest.AlbumId,
                 NewMediaItems = new List<NewMediaItem>()
             };
+
+            UploadTokenModel lastElement = uploadTokens.Last();
             foreach(UploadTokenModel uploadToken in uploadTokens) {
 
                 NewMediaItem newMedia = new NewMediaItem() {
@@ -56,11 +65,12 @@ namespace UploadToGooglePhotos.Controllers {
                 };
                 newMedia.SimpleMediaItem.UploadToken = uploadToken.UploadToken;
                 batchCreateModel.NewMediaItems.Add(newMedia);
+                if(batchCreateModel.NewMediaItems.Count % 50 == 0 || uploadToken.Equals(lastElement)) {
+                    response = UploadMedia(APIURL + "mediaItems:batchCreate", token, batchCreateModel, mediaItemRequest.AlbumId);
+                    responses.Add(response);
+                    batchCreateModel.NewMediaItems = new List<NewMediaItem>();
+                }
             }
-
-            responses = UploadMedia(APIURL + "mediaItems:batchCreate", token, batchCreateModel, mediaItemRequest.AlbumId);
-
-
             return responses;
         }
 
@@ -74,7 +84,7 @@ namespace UploadToGooglePhotos.Controllers {
                 request.AddHeader("Authorization", "Bearer " + authToken);
                 request.AddParameter("", JsonConvert.SerializeObject(body), ParameterType.RequestBody);
                 var res = client.Execute(request);
-                return JsonConvert.DeserializeObject<MediaItemCreate>(res.Content);// (NewMediaItemResult)client.Execute(request);
+                return JsonConvert.DeserializeObject<MediaItemCreate>(res.Content);
             } catch(Exception ex) {
                 NewMediaItemResult newMediaItemResult = new NewMediaItemResult() {
                     Status = new Status()
@@ -101,5 +111,6 @@ namespace UploadToGooglePhotos.Controllers {
                 return response;
             }
         }
+        
     }
 }

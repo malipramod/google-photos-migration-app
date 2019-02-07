@@ -62,5 +62,4 @@ export class MigrateComponentService {
         return this.httpClient.post(AppConstant.googlePhotosUploadAPILocal,body,this.getHeader(type));
     }
 
-
 }
