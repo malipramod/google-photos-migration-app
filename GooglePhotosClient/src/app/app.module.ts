@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import {HttpClientModule } from '@angular/common/http'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
+import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 
 import { MyNavComponent } from './ui-components/my-nav/my-nav.component';
 import { MigrateComponentComponent } from './migrate-component/migrate-component.component';
@@ -40,6 +41,7 @@ const appRoute: Routes = [
     HttpClientModule,
     LayoutModule,
     MaterialModule,
+    Ng4LoadingSpinnerModule.forRoot(),
     RouterModule.forRoot(appRoute)
   ],
   providers: [LoginComponentService,MigrateComponentService],

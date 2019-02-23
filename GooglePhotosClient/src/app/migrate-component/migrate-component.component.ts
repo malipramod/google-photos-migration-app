@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MigrateComponentService } from './migrate-component.service';
 import * as AppConstant from '../app.constant';
 import { IMediaItems, IAlbum, ICreateAlbum, IMediaItem } from './migrate-component.model';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 @Component({
     selector: 'app-migrate-component',
@@ -12,13 +13,17 @@ import { IMediaItems, IAlbum, ICreateAlbum, IMediaItem } from './migrate-compone
 })
 export class MigrateComponentComponent implements OnInit {
 
-    constructor(private loginService: LoginComponentService, private router: Router, private migrateService: MigrateComponentService) { }
+    constructor(private loginService: LoginComponentService, 
+                private router: Router, 
+                private migrateService: MigrateComponentService,
+                private spinnerService: Ng4LoadingSpinnerService) { }
     albums: any;
     nextButton: string = "Next";
     nextPageToken: string;
     pageToken: string = null;
     mediaMap = [];
     ngOnInit() {
+        this.spinnerService.show();
         if (!this.loginService.checkLogIn()) {
             alert('Please Authorize first');
             this.router.navigateByUrl("\Authorize");
@@ -30,6 +35,8 @@ export class MigrateComponentComponent implements OnInit {
                 }
             )
         }
+        //this.spinnerService.hide();
+        
     }
 
     next() {
