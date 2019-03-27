@@ -5,7 +5,7 @@ import * as googlePhotosMigration from 'google-photos-migration'
 
 @Injectable()
 export class MigrateComponentService {
-    constructor(private httpClient: HttpClient, private loginService: LoginComponentService) { }
+    constructor(private loginService: LoginComponentService) { }
     getHeader(type: string,
         param: string = null,
         contentType: string = "application/json") {
