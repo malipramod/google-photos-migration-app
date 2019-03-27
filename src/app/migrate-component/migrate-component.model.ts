@@ -9,7 +9,6 @@ export interface IAlbum {
 
 export interface IMediaItems {
     mediaItems: IMediaItem[];
-    nextPageToken: string;
 }
 export interface IMediaItem {
     baseUrl: string;

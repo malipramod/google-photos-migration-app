@@ -2,7 +2,9 @@
 .example-button-row a {
   margin-right: 8px;
 }
-
+button{
+  cursor: pointer;
+}
 div{
   padding: 5px;
   float: right;
