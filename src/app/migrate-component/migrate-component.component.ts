@@ -38,6 +38,13 @@ export class MigrateComponentComponent implements OnInit {
     }
 
     startMigrateAlbum(album: any) {
-        this.migrateService.migrateAlbum(album);
+        this.migrateService.migrateAlbum(album).then(res=>{
+            if(res.data.newMediaItemResults.length){
+                alert('Migrated: '+album.title);
+            }
+        }).catch((ex: any)=>{
+            alert('Error')
+            console.log(ex);
+        });
     }
 }
