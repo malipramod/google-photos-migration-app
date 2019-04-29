@@ -1,59 +1,43 @@
-#customBtn {
-    display: inline-block;
-    background: white;
-    color: #444;
-    width: 190px;
-    border-radius: 5px;
-    border: thin solid #888;
-    box-shadow: 1px 1px 1px grey;
-    white-space: nowrap;
-  }
-  #customBtn:hover {
-    cursor: pointer;
-  }
-  span.label {
-    font-family: serif;
-    font-weight: normal;
-  }
-  span.icon {
-    background: url('/identity/sign-in/g-normal.png') transparent 5px 50% no-repeat;
-    display: inline-block;
-    vertical-align: middle;
-    width: 42px;
-    height: 42px;
-  }
-  span.buttonText {
-    display: inline-block;
-    vertical-align: middle;
-    padding-left: 42px;
-    padding-right: 42px;
-    font-size: 14px;
-    font-weight: bold;
-    font-family: 'Roboto', sans-serif;
-  }
 
-  #srcBtn{
-    height: 100px;   
-    width: 40%;    
-  }
-  #srcImag{
-    height: 200px;   
-    width: 40%; 
-    margin-left: 40%;  
-    padding-top: 10px;
-  }
-
-  #srcDest {
+.container{
+    width: 50%;
     height: 100px;
-    width: 40%;
-  }
+    background: white;
+    display:flex;
+}
+.container > div {
+  flex: 1;
+}
 
-  .container{
-      width: 100%;
-      height: 300px;
-      background: white;
-      display:flex;
-  }
-  .container > div {
-    flex: 1; /*grow*/
-  }
+
+.left {
+  height: 100px;   
+  width: 40%;
+  flex: 0 0 50%;  
+  border: 1px solid grey;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  box-shadow: 5px 10px #888888;
+  cursor: pointer;
+}
+
+.right {
+  flex: 1;
+  height: 100px;   
+  width: 40%;
+  border: 1px solid grey;
+  padding: 10px;  
+  margin: 5px;
+  border-radius: 10px;
+  box-shadow: 5px 10px #888888;
+  cursor: pointer;
+}
+
+.container-body{
+  display: flex;
+}
+
+.time-left{
+  margin: 10px;
+}

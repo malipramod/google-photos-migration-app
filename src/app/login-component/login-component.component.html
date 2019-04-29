@@ -1,10 +1,32 @@
 <div class="container">
-    <div id="srcBtn">
-        <img *ngIf="srcImage!=''" id="srcImag" [src]="srcImage" height="50" width="50">
+    <div class="left">
+        <div class="container-body">
+            <div>
+                <img *ngIf="srcImage!=''" id="srcImag" [src]="srcImage" height="50" width="50">
+            </div>
+            <div class="time-left">
+                <span *ngIf="srcExpiresIn<=0">Logged out from Source. Click to Login.</span>
+                <span *ngIf="srcExpiresIn>0">
+                    {{srcExpiresIn}} mins left
+                </span>
+            </div>
+        </div>
         <app-google-login-button (click)="loginToGoogle('src')" [buttonTitle]='sourceTitle'></app-google-login-button>
     </div>
-    <div id="srcDest">
-        <img *ngIf="destImage!=''" id="srcImag" [src]="destImage" height="50" width="50">
-        <app-google-login-button (click)="loginToGoogle('dest')" [buttonTitle]='destinationTitle'></app-google-login-button>
+    <div class="right">
+        <div class="container-body">
+            <div>
+                <img *ngIf="destImage!=''" id="srcImag" [src]="destImage" height="50" width="50">
+            </div>
+            <div class="time-left">
+                <span *ngIf="destExpiresIn<=0">Logged out from Destination. Click to Login.</span>
+                <span *ngIf="destExpiresIn>0">
+                    {{destExpiresIn}} mins left
+                </span>
+            </div>
+        </div>
+
+        <app-google-login-button (click)="loginToGoogle('dest')" [buttonTitle]='destinationTitle'>
+        </app-google-login-button>
     </div>
 </div>

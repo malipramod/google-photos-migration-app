@@ -12,6 +12,8 @@ export class LoginComponentComponent implements OnInit {
   destinationTitle: string;
   srcImage: string = "";
   destImage: string = "";
+  srcExpiresIn:number = 0;
+  destExpiresIn:number = 0;
 
   public loginToGoogle(type: string) {
     this.loginComponentService.googleInit(this.element, type).then(
@@ -34,10 +36,16 @@ export class LoginComponentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sourceTitle = localStorage.getItem("loggedInEmailSrc") ? localStorage.getItem("loggedInEmailSrc") : "Login with Google (Source)";
+    let now:Date = new Date();
+
+    this.sourceTitle = localStorage.getItem("loggedInEmailSrc") ? localStorage.getItem("loggedInEmailSrc") : "Login with Google";
     this.srcImage = localStorage.getItem("loggedInImageSrc") ? localStorage.getItem("loggedInImageSrc") : "";
-    this.destinationTitle = localStorage.getItem("loggedInEmailDest") ? localStorage.getItem("loggedInEmailDest") : "Login with Google (Destination)";
+    this.destinationTitle = localStorage.getItem("loggedInEmailDest") ? localStorage.getItem("loggedInEmailDest") : "Login with Google";
     this.destImage = localStorage.getItem("loggedInImageDest") ? localStorage.getItem("loggedInImageDest") : "";
+    this.srcExpiresIn = Math.floor((Number.parseInt(((new Date(localStorage.getItem('GoogleToeknExpiresSrc'))).getTime() - now.getTime()).toString()))/(1000*60));
+    this.destExpiresIn = Math.floor((Number.parseInt(((new Date(localStorage.getItem('GoogleToeknExpiresDest'))).getTime() - now.getTime()).toString()))/(1000*60));
+
+
   }
 
   constructor(private element: ElementRef, private loginComponentService: LoginComponentService, private router: Router) {
