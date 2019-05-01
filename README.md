@@ -10,7 +10,7 @@ Backend: NodeJS
 ## Functional Overview
 
 Provides user to login to two diffrent Google Accounts(source and destination)
-![image](https://user-images.githubusercontent.com/13375870/55705932-8f763f00-59fd-11e9-999c-3a711cf9c34c.png)
+![image](https://user-images.githubusercontent.com/13375870/57016177-5add5800-6c36-11e9-9908-1b9c419e2184.png)
 
 Once Logged in user is redirected to Migration Page (20 Albums per page).
 ![image](https://user-images.githubusercontent.com/13375870/55706093-ef6ce580-59fd-11e9-94b9-412f6a988eae.png)
