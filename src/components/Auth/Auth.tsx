@@ -19,12 +19,39 @@ export default function Auth() {
     const [destinationUser, setDestinationUser] = useState<AuthUser>({});
 
     useEffect(()=>{
-        const localStorageSource = JSON.parse(localStorage.getItem('GSource')!);
-        const localStorageDestination = JSON.parse(localStorage.getItem('GDestination')!);
-        setSourceUser(localStorageSource);
-        setDestinationUser(localStorageDestination);
+        const localStorageSource: AuthUser = JSON.parse(localStorage.getItem('GSource')!);
+        const localStorageDestination: AuthUser = JSON.parse(localStorage.getItem('GDestination')!);
+        if(localStorageSource.loggedIn)
+            setSourceUser(localStorageSource);
+        if(localStorageDestination.loggedIn)
+            setDestinationUser(localStorageDestination);
+    },[]);
 
-    },[])
+    useEffect(()=>{
+        const localStorageSource: AuthUser = JSON.parse(localStorage.getItem('GSource')!);
+        const localStorageDestination: AuthUser = JSON.parse(localStorage.getItem('GDestination')!);
+        const currentTime = new Date().getTime()
+
+        if (localStorageSource.expiresAt) {
+            const sourceExpiry = new Date(localStorageSource.expiresAt).getTime();
+            if (currentTime > sourceExpiry) {
+                const newSourceUser = { ...sourceUser, loggedIn: false };
+                setSourceUser(newSourceUser);
+                localStorage.setItem("GSource", JSON.stringify(newSourceUser));
+            }
+        }
+        if(localStorageDestination.expiresAt){
+            const destinationExpiry = new Date(localStorageDestination.expiresAt).getTime();    
+            if (currentTime > destinationExpiry) {
+                const newDestinationUser = { ...destinationUser, loggedIn: false };
+                setDestinationUser(newDestinationUser);
+                localStorage.setItem("GDestination", JSON.stringify(newDestinationUser));
+            }
+        }
+        
+
+    }, [destinationUser, sourceUser])
+
     function onSuccess(response: GoogleLoginResponse | GoogleLoginResponseOffline, type: string) {
         const authResponse = (response as GoogleLoginResponse).getAuthResponse();
         const profile = (response as GoogleLoginResponse).getBasicProfile();
@@ -81,7 +108,10 @@ export default function Auth() {
                         loginButton.type === "destination" && destinationUser.loggedIn! ? destinationUser.email! :
                         loginButton.subTitle
                     }
-                    imageURL={loginButton.type === "source" ? sourceUser.image! : destinationUser.image!}
+                    imageURL={
+                        loginButton.type === "source" && sourceUser.loggedIn! ? sourceUser.image! :
+                        loginButton.type === "destination" && destinationUser.loggedIn! ? destinationUser.image! :
+                        ""}
                     buttonText={loginButton.buttonText}
                     type={loginButton.type}
                     isLoggedIn={loginButton.type === "source" ? sourceUser.loggedIn! : destinationUser.loggedIn!}
