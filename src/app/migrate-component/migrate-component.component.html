@@ -1,7 +1,0 @@
-<app-button (click)="next()" [btnText]="nextButton"></app-button>
-<div class="cards">
-  <div *ngFor="let album of albums" class="card">
-    <app-card [coverPhotoBaseUrl]="album.coverPhotoBaseUrl" [mediaItemsCount]="album.mediaItemsCount" [productUrl]="album.productUrl"
-      [title]="album.title" [id]="album.id" (migrateAlbum)="startMigrateAlbum(album)"></app-card>
-  </div>
-</div>
