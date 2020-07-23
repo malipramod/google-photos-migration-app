@@ -10,12 +10,17 @@ interface AuthCardProps {
     type: string;
     isLoggedIn: boolean;
     imageURL: string;
+    expiryTime: string;
     onSuccess: (response: GoogleLoginResponse | GoogleLoginResponseOffline, type: string) => void;
     onFailure: (error: any) => void;
 }
 
-export default function AuthCard({ title, subTitle, buttonText, type, isLoggedIn, imageURL, onSuccess, onFailure }: AuthCardProps) {
-    const cardStyle = { margin: '10px' };    
+export default function AuthCard({ title, subTitle, buttonText, type, isLoggedIn, imageURL,expiryTime, onSuccess, onFailure }: AuthCardProps) {
+    const cardStyle = { margin: '10px' };
+    const now = new Date();
+    const expiry = new Date(expiryTime);
+    const remainingMins = Math.ceil((expiry.getTime() - now.getTime())/(1000*60));
+
     return (
         <Card elevation={Elevation.THREE} style={cardStyle}>
             <H5>
@@ -28,7 +33,11 @@ export default function AuthCard({ title, subTitle, buttonText, type, isLoggedIn
             <img width="200" height="200" src={imageURL} alt=""/>
             <Divider/>
             {
-                !isLoggedIn &&
+                isLoggedIn?
+                <p>
+                    ~{remainingMins} Mins left
+                </p>
+                :
                 (<GoogleLogin
                     clientId={clientKey}
                     buttonText={buttonText}

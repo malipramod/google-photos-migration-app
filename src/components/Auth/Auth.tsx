@@ -123,6 +123,11 @@ export default function Auth() {
                     buttonText={loginButton.buttonText}
                     type={loginButton.type}
                     isLoggedIn={loginButton.type === "source" ? sourceUser.loggedIn! : destinationUser.loggedIn!}
+                    expiryTime = {
+                        loginButton.type === "source" && sourceUser.loggedIn! ? sourceUser.expiresAt! :
+                        loginButton.type === "destination" && destinationUser.loggedIn! ? destinationUser.expiresAt! :
+                        ""
+                    }
                     onSuccess={onSuccess}
                     onFailure={onFailure}
                 />
