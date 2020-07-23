@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Elevation, H5, Divider } from "@blueprintjs/core";
-import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout } from 'react-google-login';
+import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 import { clientKey, scope } from '../../config/config';   
 
 interface AuthCardProps {
@@ -12,11 +12,9 @@ interface AuthCardProps {
     imageURL: string;
     onSuccess: (response: GoogleLoginResponse | GoogleLoginResponseOffline, type: string) => void;
     onFailure: (error: any) => void;
-    onLogoutSuccess: (type: string) => void;
-    onLogoutFailure: () => void;
 }
 
-export default function AuthCard({ title, subTitle, buttonText, type, isLoggedIn, imageURL, onSuccess, onFailure, onLogoutSuccess, onLogoutFailure }: AuthCardProps) {
+export default function AuthCard({ title, subTitle, buttonText, type, isLoggedIn, imageURL, onSuccess, onFailure }: AuthCardProps) {
     const cardStyle = { margin: '10px' };    
     return (
         <Card elevation={Elevation.THREE} style={cardStyle}>
@@ -30,13 +28,7 @@ export default function AuthCard({ title, subTitle, buttonText, type, isLoggedIn
             <img width="200" height="200" src={imageURL} alt=""/>
             <Divider/>
             {
-                isLoggedIn?
-                (<GoogleLogout
-                    clientId={clientKey}
-                    buttonText={"Logout"}                    
-                    onLogoutSuccess={()=>onLogoutSuccess(type)}
-                    onFailure={onLogoutFailure}
-                />):
+                !isLoggedIn &&
                 (<GoogleLogin
                     clientId={clientKey}
                     buttonText={buttonText}
@@ -47,7 +39,6 @@ export default function AuthCard({ title, subTitle, buttonText, type, isLoggedIn
                     scope={scope}
                 />)
             }
-            
         </Card>
     )
 }

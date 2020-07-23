@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+import { GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout } from 'react-google-login';
 import Container from '../Container';
 import AuthCard from './AuthCard';
-import { loginButtons } from '../../config/config';
+import { loginButtons, clientKey } from '../../config/config';
 
 interface AuthUser {
     token?: string;
@@ -21,9 +21,9 @@ export default function Auth() {
     useEffect(()=>{
         const localStorageSource: AuthUser = JSON.parse(localStorage.getItem('GSource')!);
         const localStorageDestination: AuthUser = JSON.parse(localStorage.getItem('GDestination')!);
-        if(localStorageSource.loggedIn)
+        if(localStorageSource && localStorageSource.loggedIn)
             setSourceUser(localStorageSource);
-        if(localStorageDestination.loggedIn)
+        if(localStorageDestination && localStorageDestination.loggedIn)
             setDestinationUser(localStorageDestination);
     },[]);
 
@@ -32,7 +32,7 @@ export default function Auth() {
         const localStorageDestination: AuthUser = JSON.parse(localStorage.getItem('GDestination')!);
         const currentTime = new Date().getTime()
 
-        if (localStorageSource.expiresAt) {
+        if (localStorageSource && localStorageSource.expiresAt) {
             const sourceExpiry = new Date(localStorageSource.expiresAt).getTime();
             if (currentTime > sourceExpiry) {
                 const newSourceUser = { ...sourceUser, loggedIn: false };
@@ -40,7 +40,7 @@ export default function Auth() {
                 localStorage.setItem("GSource", JSON.stringify(newSourceUser));
             }
         }
-        if(localStorageDestination.expiresAt){
+        if(localStorageDestination && localStorageDestination.expiresAt){
             const destinationExpiry = new Date(localStorageDestination.expiresAt).getTime();    
             if (currentTime > destinationExpiry) {
                 const newDestinationUser = { ...destinationUser, loggedIn: false };
@@ -48,8 +48,6 @@ export default function Auth() {
                 localStorage.setItem("GDestination", JSON.stringify(newDestinationUser));
             }
         }
-        
-
     }, [destinationUser, sourceUser])
 
     function onSuccess(response: GoogleLoginResponse | GoogleLoginResponseOffline, type: string) {
@@ -77,16 +75,12 @@ export default function Auth() {
         console.log(error);
     }
     
-    function onLogoutSuccess(type: string){
-        if(type==="source"){
-            const newSourceUser = { ...sourceUser, loggedIn: false };
-            setSourceUser(newSourceUser);
-            localStorage.setItem("GSource", JSON.stringify(newSourceUser));
-        }else if(type==="destination"){
-            const newDestinationUser = { ...destinationUser, loggedIn: false };
-            setDestinationUser(newDestinationUser);
-            localStorage.setItem("GDestination", JSON.stringify(newDestinationUser));
-        }
+    function onLogoutSuccess(){
+        const newSourceUser = { ...sourceUser, loggedIn: false };
+        const newDestinationUser = { ...destinationUser, loggedIn: false };
+        setSourceUser(newSourceUser);
+        setDestinationUser(newDestinationUser);
+        localStorage.clear();
     }
 
     function onLogoutFailure() {
@@ -94,6 +88,20 @@ export default function Auth() {
     }
 
     return (
+        <>
+            {
+                sourceUser.loggedIn! && destinationUser.loggedIn! &&
+                (
+                    <div style={{justifyContent:'flex-end', display:'flex', padding:'10px 5%'}}>
+                        <GoogleLogout
+                            clientId={clientKey}
+                            buttonText={"Logout from all accounts"}
+                            onLogoutSuccess={() => onLogoutSuccess()}
+                            onFailure={onLogoutFailure}
+                        />
+                    </div>
+                )
+            }
         <Container>
             {loginButtons.map(loginButton => (
                 <AuthCard
@@ -117,10 +125,9 @@ export default function Auth() {
                     isLoggedIn={loginButton.type === "source" ? sourceUser.loggedIn! : destinationUser.loggedIn!}
                     onSuccess={onSuccess}
                     onFailure={onFailure}
-                    onLogoutSuccess={onLogoutSuccess}
-                    onLogoutFailure={onLogoutFailure}
                 />
             ))}
         </Container>
+        </>
     )
 }

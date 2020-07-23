@@ -10,7 +10,9 @@ export default function Container({ children }: ContainerProps) {
         display: 'flex',        
         flexWrap:'wrap',
         justifyContent: 'center',
-    } as CSSProperties;;
+        background: 'slategrey',
+        borderRadius: '10xp'
+    } as CSSProperties;
     return (
         <div style={containerStyle}>
             {children}
