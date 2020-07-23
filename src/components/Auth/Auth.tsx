@@ -3,16 +3,7 @@ import { GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout } from 'r
 import Container from '../Container';
 import AuthCard from './AuthCard';
 import { loginButtons, clientKey } from '../../config/config';
-
-interface AuthUser {
-    token?: string;
-    id?: string;
-    expiresAt?: string;
-    email?: string;
-    image?: string;
-    name?: string;
-    loggedIn?: boolean;
-}
+import {AuthUser} from '../../model/IAuth';
 
 export default function Auth() {
     const [sourceUser, setSourceUser] = useState<AuthUser>({});
