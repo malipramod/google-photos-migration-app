@@ -13,6 +13,7 @@
   "dependencies": {
     "@blueprintjs/core": "^3.30.0",
     "axios": "^0.19.2",
+    "google-photos-migration": "^1.0.10",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-google-login": "^5.1.21",

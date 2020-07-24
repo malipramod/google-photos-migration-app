@@ -1,19 +1,25 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Spinner, Button, Alert } from "@blueprintjs/core";
+import { Spinner, Button, Alert, Intent } from "@blueprintjs/core";
 import { useHistory  } from 'react-router-dom';
+import * as googlePhotosMigration from 'google-photos-migration';
 import Container from '../Container';
 import AlbumCard from './AlbumCard';
 import { googlePhotosLibInstance } from '../../config/axios';
-import { AlbumItem } from '../../model/IGooglePhoto';
+import { AlbumItem, Album, GooglePhotosMigrationResponse } from '../../model/IGooglePhoto';
 import { AuthUser } from '../../model/IAuth';
 
 export default function Migrate() {
     const [googlePhotosAlbums, setGooglePhotosAlbums] = useState<AlbumItem>({ albums: [], nextPageToken: "" })
     const [loading, setLoading] = useState(true);
+    const [migrationStatus, setMigrationStatus] = useState(false);
+    const [noOfPhotos, setNoOfPhotos] = useState(0);
     const history = useHistory();
     const source: AuthUser = JSON.parse(localStorage.getItem('GSource')!);
+    const dest: AuthUser = JSON.parse(localStorage.getItem('GDestination')!);
     const sourceToken: string = source ? source.token! : "";    
+    const destToken: string = dest ? dest.token! : "";    
+
 
     const getAlbums = useCallback((next?: boolean) => {
         if (sourceToken) {
@@ -38,11 +44,11 @@ export default function Migrate() {
         }
     },[googlePhotosAlbums.nextPageToken, sourceToken])
 
+    //ComponentDidMount/First time page load
     useEffect(() => {
-        if(googlePhotosAlbums && !googlePhotosAlbums.nextPageToken){
             getAlbums();
-        }
-    },[getAlbums, googlePhotosAlbums]);    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
 
     const moveNext = ()=>{
         if(googlePhotosAlbums && googlePhotosAlbums.nextPageToken){            
@@ -54,9 +60,35 @@ export default function Migrate() {
         history.push(`/${path}`);
     }
 
+    const migrate = (album:Album) =>{
+        setLoading(true);
+        googlePhotosMigration.migrateAlbum(sourceToken, destToken, album)
+            .then((res: AxiosResponse<GooglePhotosMigrationResponse>) => {
+                setLoading(false);
+                if(res.data && res.data.newMediaItemResults){
+                    setNoOfPhotos(res.data.newMediaItemResults[0].length);
+                    setMigrationStatus(true)
+                }
+            })
+            .catch((err: any) => {
+                setLoading(false);
+                console.log(err)
+            })
+    }
+
     return (
         source && source.loggedIn ?
             (<>
+                <Alert
+                    confirmButtonText="Okay"
+                    onConfirm={() => setMigrationStatus(false)}
+                    isOpen={migrationStatus}
+                    icon="media"
+                    intent={Intent.SUCCESS}>
+                    <p>
+                        {noOfPhotos} Photos Migrated!
+                    </p>
+                </Alert>
                 <Container align='flex-end'>
                     {!loading &&
                         <Button
@@ -75,6 +107,7 @@ export default function Migrate() {
                                         <AlbumCard
                                             key={googlePhotoAlbum.id}
                                             album={googlePhotoAlbum}
+                                            migrate={migrate}
                                         />
                                     ))
                                 }
@@ -82,7 +115,7 @@ export default function Migrate() {
                     }
                 </Container>
             </>) :
-            <Container align="center">
+            <Container align="center">               
                 <Alert
                     confirmButtonText="Go to Login"
                     cancelButtonText="Go to Home"

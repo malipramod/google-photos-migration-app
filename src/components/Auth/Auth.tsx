@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout } from 'react-google-login';
+import { Button } from '@blueprintjs/core';
 import Container from '../Container';
 import AuthCard from './AuthCard';
 import { loginButtons, clientKey } from '../../config/config';
@@ -78,12 +79,25 @@ export default function Auth() {
         console.log('Failed to logout');
     }
 
+    function switchAccounts(){
+        const tempSource = sourceUser;
+        localStorage.setItem("GSource", JSON.stringify(destinationUser));
+        localStorage.setItem("GDestination", JSON.stringify(tempSource));
+        setSourceUser(destinationUser);
+        setDestinationUser(tempSource);
+    }
+
     return (
         <>
             {
                 sourceUser.loggedIn! && destinationUser.loggedIn! &&
                 (
                     <div style={{justifyContent:'flex-end', display:'flex', padding:'10px 5%'}}>
+                        <Button
+                            text="Switch Accounts"
+                            style={{margin:'0 10px'}}
+                            icon="exchange"
+                            onClick={switchAccounts}/>
                         <GoogleLogout
                             clientId={clientKey}
                             buttonText={"Logout from all accounts"}

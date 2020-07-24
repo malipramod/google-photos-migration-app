@@ -3,9 +3,10 @@ import { Button, Card, Classes, Elevation, H4, H6, Divider } from "@blueprintjs/
 import { Album } from '../../model/IGooglePhoto';
 
 interface AuthCardProps {
-    album: Album
+    album: Album;
+    migrate: (album: Album) => void;
 }
-export default function AlbumCard({album}:AuthCardProps){
+export default function AlbumCard({album, migrate}:AuthCardProps){
     const cardStyle = { margin: '10px', width: '250px' };
     const keepTextCenter = { textAlign: 'center' } as CSSProperties;
     return(
@@ -18,7 +19,7 @@ export default function AlbumCard({album}:AuthCardProps){
             <img width="200" height="200" src={album.coverPhotoBaseUrl} alt="This is alt"/>
             <Divider/>
             <div style={{display:'flex', justifyContent:'flex-end'}}>
-                <Button style={{ margin: '0px 5px' }} text="Migrate" intent="success" className={Classes.BUTTON} />
+                <Button style={{ margin: '0px 5px' }} text="Migrate" intent="success" className={Classes.BUTTON} onClick={()=>migrate(album)} />
                 <Button style={{ margin: '0px 5px' }} text="View" intent="primary" className={Classes.BUTTON} onClick={()=>{window.open(album.productUrl)}}/>
             </div>
         </Card>
