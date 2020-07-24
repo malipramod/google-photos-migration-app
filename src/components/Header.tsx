@@ -22,6 +22,9 @@ export default function Header({ title }: HeaderProps) {
                     <Button className={Classes.MINIMAL} icon="refresh" text="Migrate" />
                 </Link>
             </NavbarGroup>
+            <NavbarGroup align={Alignment.RIGHT}>
+                <Button className={Classes.MINIMAL} icon="code" title="Code" onClick={()=>{window.open('https://github.com/malipramod/google-photos-migration-app','_blank')}} />
+            </NavbarGroup>
         </Navbar>
     )
 }
