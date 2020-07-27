@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Spinner, Button, Alert, Intent } from "@blueprintjs/core";
+import { Spinner, Alert, Intent } from "@blueprintjs/core";
 import { useHistory  } from 'react-router-dom';
 import * as googlePhotosMigration from 'google-photos-migration';
 import Container from '../Container';
 import AlbumCard from './AlbumCard';
+import NextButton from './NextButton';
 import { googlePhotosLibInstance } from '../../config/axios';
 import { AlbumItem, Album, GooglePhotosMigrationResponse } from '../../model/IGooglePhoto';
 import { AuthUser } from '../../model/IAuth';
@@ -14,9 +15,10 @@ export default function Migrate() {
     const [loading, setLoading] = useState(true);
     const [migrationStatus, setMigrationStatus] = useState(false);
     const [noOfPhotos, setNoOfPhotos] = useState(0);
+    const [source, setSource] = useState<AuthUser>(JSON.parse(localStorage.getItem('GSource')!));
+    const [dest, setDest] = useState<AuthUser>(JSON.parse(localStorage.getItem('GDestination')!));
+    const [disabledMigrate, setDisabledMigrate] = useState(dest && !dest.loggedIn);
     const history = useHistory();
-    const source: AuthUser = JSON.parse(localStorage.getItem('GSource')!);
-    const dest: AuthUser = JSON.parse(localStorage.getItem('GDestination')!);
     const sourceToken: string = source ? source.token! : "";    
     const destToken: string = dest ? dest.token! : "";    
 
@@ -46,9 +48,18 @@ export default function Migrate() {
 
     //ComponentDidMount/First time page load
     useEffect(() => {
+        if (source && !source.loggedIn) {
+            setSource({ ...source, loggedIn: false });            
+            return;
+        }
+
+        if (source && source.expiresAt && (new Date() > new Date(source.expiresAt))){
+            setSource({ ...source, loggedIn: false });
+            return
+        }
             getAlbums();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const moveNext = ()=>{
         if(googlePhotosAlbums && googlePhotosAlbums.nextPageToken){            
@@ -61,6 +72,16 @@ export default function Migrate() {
     }
 
     const migrate = (album:Album) =>{
+        if (dest && !dest.loggedIn) {
+            setDisabledMigrate(true);
+            setDest({ ...dest, loggedIn: false });
+            return;
+        }
+
+        if(dest && dest.expiresAt && (new Date() > new Date(dest.expiresAt) )){
+            setDest({ ...dest, loggedIn: false });
+            return;
+        }
         setLoading(true);
         googlePhotosMigration.migrateAlbum(sourceToken, destToken, album)
             .then((res: AxiosResponse<GooglePhotosMigrationResponse>) => {
@@ -89,14 +110,10 @@ export default function Migrate() {
                         {noOfPhotos} Photos Migrated!
                     </p>
                 </Alert>
-                <Container align='flex-end'>
-                    {!loading &&
-                        <Button
-                            text="Next"
-                            onClick={moveNext}
-                        />
-                    }
-                </Container>
+                <NextButton
+                    loading={loading}
+                    moveNext={moveNext}
+                />
                 <Container>
                     {
                         loading ?
@@ -108,12 +125,17 @@ export default function Migrate() {
                                             key={googlePhotoAlbum.id}
                                             album={googlePhotoAlbum}
                                             migrate={migrate}
+                                            disabledMigrate = {disabledMigrate}
                                         />
                                     ))
                                 }
                             </>
                     }
                 </Container>
+                <NextButton
+                    loading={loading}
+                    moveNext={moveNext}
+                />
             </>) :
             <Container align="center">               
                 <Alert

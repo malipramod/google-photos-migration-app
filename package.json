@@ -12,13 +12,16 @@
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.30.0",
+    "@types/showdown": "^1.9.3",
     "axios": "^0.19.2",
     "google-photos-migration": "^1.0.10",
+    "html-react-parser": "^0.13.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-google-login": "^5.1.21",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "showdown": "^1.9.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
