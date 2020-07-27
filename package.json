@@ -37,6 +37,7 @@
   "scripts": {
     "start": "set PORT=3001 && react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "rimraf build/**/*.map",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
