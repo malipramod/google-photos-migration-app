@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: kentaro-m/auto-assign-action@v1.1.1
         with:
-          configuration-path: ".github/auto_assign.yml"
+          configuration-path: "./auto_assign.yml"
   build:
     name: Build
     runs-on: ubuntu-latest
