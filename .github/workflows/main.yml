@@ -1,9 +1,6 @@
-name: Firebase Deploy
+name: Build and Deploy
 on:
   push:
-    branches:
-      - master
-  pull_request:
     branches:
       - master
 
