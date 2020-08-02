@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button} from "@blueprintjs/core";
+import { Button } from "@blueprintjs/core";
 import Container from '../Container';
 
 interface NextButtonProps{
@@ -7,15 +7,16 @@ interface NextButtonProps{
     moveNext: () => void;
 }
 
-const NextButton = ({ loading, moveNext }: NextButtonProps) => (
-    <Container align='flex-end'>
-        {!loading &&
+const NextButton = ({ loading, moveNext }: NextButtonProps): JSX.Element => (
+	<Container align='flex-end'>
+		{
+			!loading &&
             <Button
-                text="Next"
-                onClick={moveNext}
+            	onClick={ moveNext }
+            	text="Next"
             />
-        }
-    </Container>
-)
+		}
+	</Container>
+);
 
 export default NextButton;

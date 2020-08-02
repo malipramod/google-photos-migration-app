@@ -13,6 +13,8 @@ jobs:
         uses: actions/checkout@master
       - name: Install Dependencies
         run: npm install
+      - name: Run Lint
+        run: npm run lint
       - name: Run Tests
         env:
           CI: true
