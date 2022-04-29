@@ -1,5 +1,7 @@
 # Google Photos Migration
 
+## Note: This project is not maintained by author anymore. Feel free to contribute or fork it.
+
 Migrates Photo/Albums from one Google Photos Account to Another with with Single click.
 
 ## Tech Stack
